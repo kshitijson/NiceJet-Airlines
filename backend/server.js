@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const { authUser } = require('./middleware/authenticate');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -12,9 +13,10 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-app.get('/api/name', async (req, res) => {
+app.post('/api/name', authUser, async (req, res) => {
 
-    res.send("Hello");
+    console.log(req.user)
+    res.send("received")
 
 })
 
