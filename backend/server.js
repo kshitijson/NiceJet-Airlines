@@ -6,8 +6,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
+const auth = require('./routes/auth')
 const { authUser } = require('./middleware/authenticate');
-const { signup } = require('./Auth/signup')
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -18,36 +18,9 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-// For registering new Users
-app.post('/api/signup', async (req, res) => {
 
-    const username = req.body.username;
-    const email = req.body.email;
-    const password = req.body.password;
-
-    const result = await signup(username, email, password);
-
-    if (result === 0) {
-        res.send({
-            status: true,
-            message: "Registered Successfully"
-        })
-    }
-    else if (result === -1) {
-        res.send({
-            status: false,
-            message: "User already Exists"
-        })
-    }
-    else {
-        res.send({
-            status: false,
-            message: "Internal Server Error"
-        })
-    }
-
-})
-
+// for registration and login
+app.use('/api', auth)
 
 
 const startServer = async () => {
