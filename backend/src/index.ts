@@ -1,10 +1,12 @@
 import dotenv from 'dotenv';
-import express, { Request, Response, NextFunction } from 'express';
+import express from 'express';
 import bodyParser from 'body-parser';
 import cors, { CorsOptions } from 'cors';
 import mongoose from 'mongoose';
 
-import auth from './routes/auth'; 
+import authRoute from './routes/authRoute'; 
+import adminRoute from './routes/adminRoute'; 
+
 import { authUser } from './middleware/authenticate'; 
 
 dotenv.config({ path: __dirname + '/../.env' });
@@ -25,8 +27,10 @@ app.use(cors(corsOptions));
 // Apply authentication middleware if needed
 // app.use(authUser);
 
-// Register routes
-app.use('/api', auth);
+// Register and login routes
+app.use('/api', authRoute);
+
+app.use('/api', adminRoute);
 
 const startServer = async (): Promise<void> => {
     app.listen(5000, () => {
