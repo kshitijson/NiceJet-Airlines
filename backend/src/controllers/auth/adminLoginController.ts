@@ -1,18 +1,18 @@
 import { Request, Response } from 'express';
 import User, { IUser } from '../../models/user';
+import Admin, { IAdmin } from '../../models/admin';
 import { authToken } from '../utils/token';
 import bcrypt from 'bcrypt';
 
-export const login = async (req: Request, res: Response): Promise<Response> => {
+export const AdminLogin = async (req: Request, res: Response): Promise<Response> => {
 
     // 1 --> Check if user exists
     // 2 --> Use bcrypt.compare check if the password in DB (hashed) and received plain text password match
     // 3 --> If they match, login is successfull, fetch the users _id from the document received, and use it to create a jwt token
 
-    // ===== Refer Admin Login controller for detailed comments, only chenge is that here USer model is used instead of Admin model
+    const { AdminID, password }: { AdminID: string; password: string } = req.body;
 
-    const { email, password }: { email: string; password: string } = req.body;
-
+    // in case of a succesful login
     const clear = (token: string): Response => {
         return res.status(200).send({
             state: true,
@@ -21,6 +21,7 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
         });
     };
 
+    // in case of login unsuccessful due to credential mismatch
     const fail = (): Response => {
         return res.status(401).send({
             state: false,
@@ -29,8 +30,10 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
     };
 
     try {
-        const user = await User.findOne({ email }) as IUser;
+        // fetch the admin document
+        const user = await Admin.findOne({ AdminID }) as IAdmin;
 
+        // extract the password from the document, if user exists then, else return fail()
         let dbPassword: string;
         if (user) {
             dbPassword = user.password;
@@ -38,7 +41,9 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
             return fail();
         }
 
+        // compare the plain etxt and hashed DB password
         const match = await bcrypt.compare(password, dbPassword);
+        // if match, create a token, pass it to the clear() function and return that function
         if (match) {
             const token = authToken(user._id);
             return clear(token);

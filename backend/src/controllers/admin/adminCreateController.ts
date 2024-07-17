@@ -6,12 +6,16 @@ import { JwtPayload } from 'jsonwebtoken';
 
 export const AdminCreate = async (req: Request, res: Response): Promise<Response> => {
 
+    // the req.user is of below types and re.user is only availbale in the CustomRequest Interface we created
+    // by extending the express Request Interface
     const admin: userInt | JwtPayload = (req as CustomRequest).user;
     let createdBy;
 
-    // fetch the created by admin users object id, from the req.user as the adminID received from the middleware.
+    // fetch the created by admin users
+    // to check if the admin user really exists 
+    // from the req.user as the _id received from the middleware.
     try {
-        const adminFind = await Admin.findOne({ AdminID: admin.userId });
+        const adminFind = await Admin.findOne({ _id: admin.userId });
         createdBy = adminFind? adminFind._id: null;
     } catch (error) {
         console.log("===========================================");

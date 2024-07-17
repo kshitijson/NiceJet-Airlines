@@ -7,7 +7,6 @@ import mongoose from 'mongoose';
 import authRoute from './routes/authRoute'; 
 import adminRoute from './routes/adminRoute'; 
 
-import { authUser } from './middleware/authenticate'; 
 
 dotenv.config({ path: __dirname + '/../.env' });
 
