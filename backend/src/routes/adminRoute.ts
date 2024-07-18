@@ -1,6 +1,6 @@
 import express, { Router } from 'express';
 import { AdminCreate } from '../controllers/admin/adminCreateController';
-import { AdminLogin } from '../controllers/auth/adminLoginController';
+import { AdminLogin } from '../controllers/admin/adminLoginController';
 import { ListAdmin } from '../controllers/admin/listAdmin';
 import { authUser } from '../middleware/authenticate';
 import { adminDelete } from '../controllers/admin/adminDelete';
