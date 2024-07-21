@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import User, { IUser } from '../../models/user';
 import Admin, { IAdmin } from '../../models/admin';
-import { authToken } from '../utils/token';
+import { authToken } from '../../utils/token';
 import bcrypt from 'bcrypt';
 
 export const AdminLogin = async (req: Request, res: Response): Promise<Response> => {

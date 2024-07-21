@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import User, { IUser } from '../../models/user';
-import { authToken } from '../utils/token';
+import { authToken } from '../../utils/token';
 import bcrypt from 'bcrypt';
 
 export const login = async (req: Request, res: Response): Promise<Response> => {

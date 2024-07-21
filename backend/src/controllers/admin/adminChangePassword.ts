@@ -9,14 +9,7 @@ import Admin, { IAdmin } from '../../models/admin';
 import { CustomRequest, userInt } from '../../middleware/authenticate';
 import { JwtPayload } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-
-interface updateInterface {
-    acknowledged: boolean,
-    modifiedCount: number,
-    upsertedId: string | null,
-    upsertedCount: number,
-    matchedCount: number
-}
+import { UpdateRecord } from '../../interfaces/updateRecord';
 
 export const AdminChangePassword = async (req: Request, res: Response): Promise<Response> => {
 
@@ -52,7 +45,7 @@ export const AdminChangePassword = async (req: Request, res: Response): Promise<
                 $set: { password: hashedPassword }
             },
             { upsert: false }
-        ) as updateInterface;
+        ) as UpdateRecord;
 
         if (updateResult.modifiedCount === 1)
             return res.status(200).send({

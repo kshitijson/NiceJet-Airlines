@@ -2,11 +2,7 @@ import { Request, Response } from 'express';
 import Admin from '../../models/admin';
 import { CustomRequest, userInt } from '../../middleware/authenticate';
 import { JwtPayload } from 'jsonwebtoken';
-
-interface DeleteRecord {
-    acknowledged: boolean,
-    deletedCount: number
-}
+import { DeleteRecord } from '../../interfaces/deleteRecord';
 
 export const adminDelete = async (req: Request, res: Response): Promise<Response> => {
 
