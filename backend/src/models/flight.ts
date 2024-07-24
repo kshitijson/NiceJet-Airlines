@@ -10,29 +10,35 @@ interface IFlight extends Document {
     arrival: Date;
     status: 'on time' | 'delayed' | 'canceled';
     price: Number;
-    seats: ISeat[]; 
+    seats: {
+        [key: string]: ISeat;
+    }; 
     createdBy: IAdmin;
     _id: string;
 }
 
-const filghtSchema = new Schema<IFlight>({
+const flightSchema = new Schema<IFlight>({
     flightNumber: { type: String, required: true, unique: true },
     source: { 
-        fullname: { type: String, required: true}, 
-        code: { type: String, required: true} 
+        fullname: { type: String, required: true }, 
+        code: { type: String, required: true } 
     },
     destination: {
-        fullname: { type: String, required: true},
-        code: { type: String, required: true}
+        fullname: { type: String, required: true },
+        code: { type: String, required: true }
     },
     departure: { type: Date, required: true },
     arrival: { type: Date, required: true },
     status: { type: String, enum: ['on time', 'delayed', 'canceled'], default: 'on time' },
     price: { type: Number, required: true },
-    seats: [seatSchema],
+    seats: {
+        type: Map,
+        of: seatSchema,
+        required: true
+    },
     createdBy: { type: Schema.Types.ObjectId, ref: 'Admin' }
-})
-const Flight = model<IFlight>('Flight', filghtSchema);
+});
+const Flight = model<IFlight>('Flight', flightSchema);
 
 export default Flight;
 export type { IFlight };
