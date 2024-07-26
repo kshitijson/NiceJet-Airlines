@@ -6,8 +6,8 @@ interface IFlight extends Document {
     flightNumber: String;
     source: { fullname: String, code: String };
     destination: { fullname: String, code: String };
-    departure: Date;
-    arrival: Date;
+    departure: { date: string, time: string };
+    arrival: { date: string, time: string };
     status: 'on time' | 'delayed' | 'canceled';
     price: Number;
     seats: {
@@ -27,8 +27,14 @@ const flightSchema = new Schema<IFlight>({
         fullname: { type: String, required: true },
         code: { type: String, required: true }
     },
-    departure: { type: Date, required: true },
-    arrival: { type: Date, required: true },
+    departure: {
+        date: { type: String, required: true },
+        time: { type: String, required: true }
+    },
+    arrival: {
+        date: { type: String, required: true },
+        time: { type: String, required: true }
+    },
     status: { type: String, enum: ['on time', 'delayed', 'canceled'], default: 'on time' },
     price: { type: Number, required: true },
     seats: {
