@@ -6,6 +6,7 @@ import mongoose from 'mongoose';
 
 import authRoute from './routes/authRoute'; 
 import adminRoute from './routes/adminRoute'; 
+import userRoute from './routes/userRoute'; 
 
 
 dotenv.config({ path: __dirname + '/../.env' });
@@ -30,6 +31,8 @@ app.use(cors(corsOptions));
 app.use('/api', authRoute);
 
 app.use('/api', adminRoute);
+
+app.use('/api', userRoute)
 
 const startServer = async (): Promise<void> => {
     app.listen(5000, () => {
