@@ -10,7 +10,7 @@ export const FlightList = async (req: Request, res: Response): Promise<Response>
         
         const admin: userInt | JwtPayload = (req as CustomRequest).user;
 
-        const flightDetails: IFlight[] = await Flight.find({ createdBy: admin.userId });
+        const flightDetails: IFlight[] = await Flight.find({ createdBy: admin.userId }).populate('seats');
 
         return res.status(200).send({
             state: true,

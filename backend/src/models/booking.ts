@@ -29,24 +29,19 @@ interface IBooking extends Document {
         email: string;
         phone: string;
     };
-    specialRequests?: string;
-    frequentFlyerNumber?: string;
     baggageDetails?: {
         numberOfBags: number;
         weight: number;
     };
     travelDocumentInfo?: {
-        passportNumber?: string;
-        visaInfo?: string;
+        passportNumber?: string | null;
+        visaInfo?: string | null;
     };
     emergencyContactInfo?: {
         name: string;
         phone: string;
         relation: string;
     };
-    additionalServices?: string[];
-    insuranceDetails?: string;
-    notes?: string;
 }
 
 const bookingSchema = new Schema<IBooking>({
@@ -74,8 +69,6 @@ const bookingSchema = new Schema<IBooking>({
         email: { type: String, required: true },
         phone: { type: String, required: true }
     },
-    specialRequests: { type: String },
-    frequentFlyerNumber: { type: String },
     baggageDetails: {
         numberOfBags: { type: Number },
         weight: { type: Number }
@@ -88,10 +81,7 @@ const bookingSchema = new Schema<IBooking>({
         name: { type: String },
         phone: { type: String },
         relation: { type: String }
-    },
-    additionalServices: [{ type: String }],
-    insuranceDetails: { type: String },
-    notes: { type: String }
+    }
 });
 
 const Booking = model<IBooking>('Booking', bookingSchema);

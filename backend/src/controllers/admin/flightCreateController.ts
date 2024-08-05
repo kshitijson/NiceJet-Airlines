@@ -2,23 +2,34 @@ import { Request, Response } from 'express';
 import Flight, { IFlight } from '../../models/flight';
 import { CustomRequest, userInt } from '../../middleware/authenticate';
 import { JwtPayload } from 'jsonwebtoken';
+import { Seat, ISeat } from '../../models/seat';
+import { serverErrMsg } from '../../utils/serverErr';
 
 export const FlightCreate = async (req: Request, res: Response): Promise<Response> => {
-
     try {
-        
         const admin: userInt | JwtPayload = (req as CustomRequest).user;
         const { flight }: { flight: IFlight } = req.body;
 
-        const flightexists: IFlight[] = await Flight.find({ flightNumber: flight.flightNumber });
-        if (flightexists.length > 0) 
+        // Check if the flight already exists
+        const flightExists: IFlight[] = await Flight.find({ flightNumber: flight.flightNumber });
+        if (flightExists.length > 0) 
             return res.status(409).send({
                 state: false,
                 message: "Flight Already Exists"
-            })
+            });
 
+        // Handle seats separately
+        const seatIds: Record<string, string> = {};
+        for (const [seatType, seatData] of Object.entries(flight.seats)) {
+            const newSeat: ISeat = new Seat({ type: seatType, ...seatData });
+            const savedSeat = await newSeat.save();
+            seatIds[seatType] = savedSeat._id as unknown as string;
+        }
+
+        // Create the new flight object
         const newFlight: IFlight = new Flight({
             ...flight,
+            seats: seatIds,
             createdBy: admin.userId
         });
         await newFlight.save();
@@ -26,13 +37,9 @@ export const FlightCreate = async (req: Request, res: Response): Promise<Respons
         return res.status(201).send({
             state: true,
             message: "Flight Created Successfully"
-        })
+        });
     } catch (error) {
         console.log(error);
-        return res.status(500).send({
-            status: false,
-            message: "Internal Server Error"
-        });
+        return res.status(500).send(serverErrMsg);
     }
-
-}
+};

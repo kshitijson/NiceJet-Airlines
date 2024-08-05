@@ -1,5 +1,4 @@
 import { Schema, model, Document } from 'mongoose';
-import { seatSchema, ISeat } from './seat';
 import { IAdmin } from './admin';
 
 interface IFlight extends Document {
@@ -10,9 +9,7 @@ interface IFlight extends Document {
     arrival: { date: string, time: string };
     status: 'on time' | 'delayed' | 'canceled';
     price: Number;
-    seats: {
-        [key: string]: ISeat;
-    }; 
+    seats: Record<string, Schema.Types.ObjectId>; 
     createdBy: IAdmin;
     _id: string;
 }
@@ -39,11 +36,11 @@ const flightSchema = new Schema<IFlight>({
     price: { type: Number, required: true },
     seats: {
         type: Map,
-        of: seatSchema,
+        of: { type: Schema.Types.ObjectId, ref: 'Seat' },
         required: true
     },
     createdBy: { type: Schema.Types.ObjectId, ref: 'Admin' }
-});
+}, { timestamps: true });
 const Flight = model<IFlight>('Flight', flightSchema);
 
 export default Flight;
