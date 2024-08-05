@@ -12,18 +12,18 @@ export const FlightCreate = async (req: Request, res: Response): Promise<Respons
 
         // Check if the flight already exists
         const flightExists: IFlight[] = await Flight.find({ flightNumber: flight.flightNumber });
-        if (flightExists.length > 0) 
+        if (flightExists.length > 0)
             return res.status(409).send({
                 state: false,
                 message: "Flight Already Exists"
             });
 
         // Handle seats separately
-        const seatIds: Record<string, string> = {};
+        const seatIds: Map<string, string> = new Map();
         for (const [seatType, seatData] of Object.entries(flight.seats)) {
-            const newSeat: ISeat = new Seat({ type: seatType, ...seatData });
-            const savedSeat = await newSeat.save();
-            seatIds[seatType] = savedSeat._id as unknown as string;
+            const newSeat = new Seat({ type: seatType, ...seatData }) as ISeat;
+            const savedSeat = await newSeat.save() as ISeat;
+            seatIds.set(seatType, savedSeat._id.toString());
         }
 
         // Create the new flight object

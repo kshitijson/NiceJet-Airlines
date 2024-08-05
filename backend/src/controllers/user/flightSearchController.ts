@@ -12,12 +12,12 @@ export const FlightSearch = async (req: Request, res: Response): Promise<Respons
     }: { 
             source: Partial<IFlight>, 
             destination: Partial<IFlight>, 
-            date: string, people: number 
+            date: string, 
+            people: number 
         } = req.body;
-        
 
     try {
-        
+        // Fetch flights and populate seats
         let flightDetails: IFlight[] = await Flight.find({ 
                 source: source,
                 destination: destination,
@@ -27,19 +27,28 @@ export const FlightSearch = async (req: Request, res: Response): Promise<Respons
         if (flightDetails.length === 0) 
             return res.status(404).send({
                 state: false,
-                message: "Flights for the specific details does not exists"
-            })
+                message: "Flights for the specific details do not exist"
+            });
 
-        flightDetails.forEach(flight => {
-            console.log(flight.flightNumber);
-        });
+        console.log(flightDetails[0].seats)
 
+        // Filter flights based on available seats
         // flightDetails = flightDetails.filter(flight => {
         //     let totalAvailableSeats = 0;
-        //     for (const seatType in flight.seats) {
-        //         const seat = flight.seats[seatType];
-        //         totalAvailableSeats += seat.available;
+
+        //     // Manually convert the Map to a Record<string, ISeat>
+        //     const seats: Record<string, ISeat> = {};
+        //     flight.seats.forEach((value, key) => {
+        //         seats[key] = value;
+        //     });
+
+        //     for (const seatType in seats) {
+        //         const seat = seats[seatType];
+        //         if (seat) { // Ensure seat is not null or undefined
+        //             totalAvailableSeats += seat.available;
+        //         }
         //     }
+
         //     return totalAvailableSeats >= people;
         // });
 
@@ -58,14 +67,13 @@ export const FlightSearch = async (req: Request, res: Response): Promise<Respons
             state: true,
             message: "Successfully fetched Flight Details",
             flightDetails
-        })
+        });
 
     } catch (error) {
+        console.log(error);
         return res.status(500).send({
             state: false,
             message: "Internal Server Error"
-        })
+        });
     }
-
-
 }

@@ -1,5 +1,6 @@
 import { Schema, model, Document } from 'mongoose';
 import { IAdmin } from './admin';
+import { ISeat } from './seat';
 
 interface IFlight extends Document {
     flightNumber: String;
@@ -9,7 +10,7 @@ interface IFlight extends Document {
     arrival: { date: string, time: string };
     status: 'on time' | 'delayed' | 'canceled';
     price: Number;
-    seats: Record<string, Schema.Types.ObjectId>; 
+    seats: Record<string, ISeat>; 
     createdBy: IAdmin;
     _id: string;
 }

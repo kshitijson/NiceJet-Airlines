@@ -4,6 +4,7 @@ interface ISeat extends Document {
     price: number;
     available: number;
     booked: number;
+    _id: string;
 }
 
 export const seatSchema = new Schema<ISeat>({
