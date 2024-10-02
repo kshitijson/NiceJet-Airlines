@@ -10,7 +10,8 @@ interface IFlight extends Document {
     arrival: { date: string, time: string };
     status: 'on time' | 'delayed' | 'canceled';
     price: Number;
-    seats: Record<string, ISeat>; 
+    // seats: Record<string, ISeat>; 
+    seats: Map<string, ISeat>; 
     createdBy: IAdmin;
     _id: string;
 }
